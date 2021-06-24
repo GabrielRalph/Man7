@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>linux man7</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDZN3RXo6hsm9b28AaSoFKAnlFyYs4quz4",
+        authDomain: "svgdrawpad.firebaseapp.com",
+        databaseURL: "https://svgdrawpad.firebaseio.com",
+        projectId: "svgdrawpad",
+        storageBucket: "svgdrawpad.appspot.com",
+        messagingSenderId: "399249408634",
+        appId: "1:399249408634:web:b942af72bbdfd752d0b1c3"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+  </script>
+  </head>
+  <body>
+    <div id = "add">
+      ADD
+    </div>
+  </body>
+  <script type = module>
+    import {VList, SvgPlus} from "./VList.js"
+    import {LinuxMan7} from "./LinuxMan7.js"
+    let ref = firebase.database().ref('linux');
+
+    let linuxMan7 = new LinuxMan7()
+    document.body.appendChild(linuxMan7)
+    ref.on('value', (sc) => {
+      linuxMan7.json = sc.val();
+    })
+
+
+    function add(){
+      let input = new SvgPlus("input");
+      input.props = {type: "file"};
+      // console.log("x");
+      input.oninput = () => {
+        let reader = new FileReader();
+        reader.onload = () => {
+          const parser = new DOMParser();
+          const doc3 = parser.parseFromString(reader.result, "text/html");
+          ref.update(LinuxMan7.HTMLSymbolToJSON(doc3.body));
+        }
+        reader.readAsText(input.files[0]);
+      }
+      input.click();
+    }
+    document.getElementById("add").onclick = add;
+  </script>
+
+  <style>
+    body{
+      font-family: monospace;
+    }
+
+    .symbols {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      padding-top: calc(2em + 20px * 2);
+      overflow-y: scroll;
+    }
+    .search {
+      position: fixed;
+      padding: 20px;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2em;
+      background: #FFFFFFAA;
+    }
+    .search input{
+      font-size: 1.5em;
+      font-family: monospace;
+    }
+
+    .pres .header h1{
+      margin: 0;
+      user-select: none;
+    }
+    .header h1{
+      user-select: none;
+    }
+
+    .linux-details .header pre, .linux-details .header h1{
+      display: inline-block;
+    }
+
+    .linux-details .list{
+      padding-left: 3em;
+    }
+
+    #add {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 20px;
+      font-size: 1.5em;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    b{
+      color: #b356f9;
+    }
+    i{
+      color: #0067d4;
+    }
+    a{
+      text-decoration: none;
+      color: #ff60a8;
+    }
+  </style>
+</html>
