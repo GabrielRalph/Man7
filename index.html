@@ -25,6 +25,9 @@
     <div id = "add">
       ADD
     </div>
+    <div id = "time">
+      Time
+    </div>
   </body>
   <script type = module>
     import {VList, SvgPlus} from "./VList.js"
@@ -36,6 +39,47 @@
     ref.on('value', (sc) => {
       linuxMan7.json = sc.val();
     })
+
+    let set_time = (str) => {document.getElementById("time").innerHTML = str}
+    let start = new Date("Fri Jun 25 2021 1:0:0 GMT+1000 (Australian Eastern Standard Time)")
+    let sm = start.getMinutes();
+    let sh = start.getHours();
+    if (sh < 12) sh = sh + 12;
+    let ts = sh*60 + sm;
+    let total = 120;
+    let reading = 10;
+    let extra = 20;
+
+    let q1 = 0.4;
+    let q2 = 0.6;
+
+    let next = () => {
+
+      var today = new Date();
+
+      let m =today.getMinutes();
+      let h = today.getHours();
+      if (h < 12) h = h + 12;
+      let t = 60*h + m;
+
+      console.log(t, ts);
+      if (t < ts) {
+        set_time(`<b style = "color:grey">waiting ${ts - t}</b>`)
+      }else if (t < ts + reading) {
+        set_time(`<b style = "color:black">reading ${ts + reading - t}</b>`);
+      }else if (t < ts + reading + total*q1) {
+        set_time(`<b style = "color:#3471ff">q1 ${ts + reading + total*q1 - t}</b>`);
+      }else if (t < ts + reading + total) {
+        set_time(`<b style = "color:#f39a13">q2 ${ts + reading + total - t}</b>`);
+      }else if(t < ts + reading + total + extra) {
+        set_time(`<b style = "color:#0fb324">Extra time</b> ${ts + reading + total + extra - t}</b>`)
+      }else{
+        set_time(`<b color = "red">Upload time ${ts + reading + total + extra + 15 - t}</b>`)
+      }
+      setTimeout(next, 100)
+    }
+
+    next();
 
 
     function add(){
@@ -54,6 +98,8 @@
       input.click();
     }
     document.getElementById("add").onclick = add;
+
+
   </script>
 
   <style>
@@ -102,7 +148,7 @@
       padding-left: 3em;
     }
 
-    #add {
+    #add, #time{
       position: fixed;
       top: 0;
       right: 0;
@@ -111,6 +157,8 @@
       font-weight: 600;
       cursor: pointer;
       z-index: 10;
+    }
+    #add{
       display: none;
     }
 
