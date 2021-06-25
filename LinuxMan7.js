@@ -50,7 +50,7 @@ class LinuxMan7 extends SvgPlus{
   filter(json){
     let search = this.search.value.toUpperCase();
     if (search.length < 3) search = null;
-
+    // console.log(search);
     let news = [];
     let keys = {};
     let newJson = json;
@@ -61,8 +61,9 @@ class LinuxMan7 extends SvgPlus{
 
       for (let symbol_name in newJson) {
         let str = symbol_name + newJson[symbol_name][i];
+        str = str.toUpperCase();
         // if (search != null)console.log(str);
-        if (search == null || str.toUpperCase().indexOf(search) !== -1){
+        if (search == null || str.indexOf(search) !== -1){
           // if (search!==null)console.log(str);
           keys[symbol_name] = 1;
           news.push({
@@ -75,7 +76,6 @@ class LinuxMan7 extends SvgPlus{
       }
 
       newJson = nJson;
-      console.log(newJson);
     }
     return news;
   }
