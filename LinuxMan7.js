@@ -37,24 +37,64 @@ class LinuxMan7 extends SvgPlus{
     this.body = this.createChild("DIV", {class: "symbols"});
     this.search = this.createChild("DIV", {class: "search"}).createChild("INPUT");
     this.search.onkeyup = () => {
-      let value = this.search.value.toUpperCase();
-      
+      this.draw();
+
     }
   }
 
   set json(json) {
     this._json = json;
-    this.body.innerHTML = "";
-    for (let symbol_name in json) {
-      let symbol = json[symbol_name];
-      let details = [];
-      let symbols = new LinuxSymbol(symbol_name);
-      for (let detail in symbol){
+    this.draw();
+  }
 
+  filter(json){
+    let search = this.search.value.toUpperCase();
+    if (search.length < 3) search = null;
+
+    let news = [];
+    let keys = {};
+    let newJson = json;
+
+    for (let i = 0; i < 5; i++) {
+      // console.log(i);
+      let nJson = {};
+
+      for (let symbol_name in newJson) {
+        let str = symbol_name + newJson[symbol_name][i];
+        // if (search != null)console.log(str);
+        if (search == null || str.toUpperCase().indexOf(search) !== -1){
+          // if (search!==null)console.log(str);
+          keys[symbol_name] = 1;
+          news.push({
+            name: symbol_name,
+            details: newJson[symbol_name]
+          })
+        }else{
+          nJson[symbol_name] = newJson[symbol_name];
+        }
+      }
+
+      newJson = nJson;
+      console.log(newJson);
+    }
+    return news;
+  }
+
+  draw(json = this._json){
+    this.body.innerHTML = "";
+    let man7 = this.filter(json)
+
+    for (let symbol of man7) {
+      let details = [];
+
+      let symbols = new LinuxSymbol(symbol.name);
+      for (let detail in symbol.details){
         if (detail == 0){
-          symbols.appendChildToHead(new Pre(symbol[detail]))
-          symbols.description = symbol[detail];
-        } else details.push({name: TITLE_LIST[detail], pre: symbol[detail]});
+          symbols.appendChildToHead(new Pre(symbol.details[detail]))
+          symbols.description = symbol.details[detail];
+        } else {
+          details.push({name: TITLE_LIST[detail], pre: symbol.details[detail]});
+        }
       }
       symbols.list = details;
       this.body.appendChild(symbols)
