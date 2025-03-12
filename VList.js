@@ -71,7 +71,7 @@ class VList extends SvgPlus{
       // }
       this._listElement.appendChild(element);
       // let dh = this.height - height;
-      // await this.waveTransistion((t) => {
+      // await this.waveTransition((t) => {
       //   this._listElement.styles = {
       //     height: `${height + dh*t}`
       //   }
@@ -121,7 +121,7 @@ class VList extends SvgPlus{
   async show(){
     let height = this.height;
     this._moving = true;
-    await this.waveTransistion((t) => {
+    await this.waveTransition((t) => {
       this.height = t*height
     }, 200, true)
     this.height = 'auto'
@@ -131,7 +131,7 @@ class VList extends SvgPlus{
   async hide(){
     this._moving = true;
     let height = this.height;
-    await this.waveTransistion((t) => {
+    await this.waveTransition((t) => {
       this.height = t*height
     }, 200, false)
     this._moving = false;
