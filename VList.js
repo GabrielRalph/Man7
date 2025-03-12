@@ -1,4 +1,4 @@
-import {SvgPlus} from 'https://www.svg.plus/3.5.js'
+import {SvgPlus} from 'https://www.svg.plus/4.js'
 
 class VList extends SvgPlus{
   constructor(name, list, ItemClass, state = true){
